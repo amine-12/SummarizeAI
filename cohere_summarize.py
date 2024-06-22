@@ -3,26 +3,23 @@ import cohere
 from datasets import load_from_disk
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 api_key = os.getenv('COHERE_API_KEY')
 
-# Initialize Cohere client
 co = cohere.Client(api_key)
 
-# Load the dataset
-dataset = load_from_disk('data/cnn_dailymail')  # Load the original dataset
+dataset = load_from_disk('data/cnn_dailymail')
 
 def summarize_text(text):
     response = co.summarize(
         text=text,
-        length='medium',  # You can change to 'short', 'long', or 'auto'
-        format='paragraph',  # You can change to 'bullets' or 'auto'
-        model='command',  # You can change to 'command-nightly', 'command-light', etc.
-        extractiveness='low',  # You can change to 'medium', 'high', or 'auto'
+        length='medium',
+        format='paragraph',
+        model='command',
+        extractiveness='low',
         temperature=0.3
     )
-    summary = response.summary  # Correct attribute access
+    summary = response.summary
     return summary
 
 def summarize_dataset(dataset):
@@ -34,6 +31,6 @@ def summarize_dataset(dataset):
 
 if __name__ == "__main__":
     summaries = summarize_dataset(dataset)
-    for i, summary in enumerate(summaries[:5]):  # Print the first 5 summaries
+    for i, summary in enumerate(summaries[:5]):
         print(f"Summary {i+1}:\n{summary}\n")
     print("Summarization completed.")

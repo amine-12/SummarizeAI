@@ -2,15 +2,12 @@ from transformers import BartForConditionalGeneration, BartTokenizer
 from datasets import load_from_disk, load_metric
 
 def evaluate_model():
-    # Load the dataset
     datasets = load_from_disk('data/final_cnn_dailymail')
 
-    # Load the tokenizer and model
     model_name = './summarization_model'
     tokenizer = BartTokenizer.from_pretrained(model_name)
     model = BartForConditionalGeneration.from_pretrained(model_name)
 
-    # Define the metric
     rouge = load_metric('rouge')
 
     def compute_metrics(eval_pred):
@@ -21,7 +18,6 @@ def evaluate_model():
         result = rouge.compute(predictions=decoded_preds, references=decoded_labels, use_stemmer=True)
         return {key: value.mid.fmeasure * 100 for key, value in result.items()}
 
-    # Evaluate the model
     trainer = Trainer(
         model=model,
         tokenizer=tokenizer,

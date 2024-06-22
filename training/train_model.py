@@ -3,15 +3,12 @@ from transformers import BartForConditionalGeneration, BartTokenizer, Trainer, T
 from datasets import load_from_disk
 
 def train_model():
-    # Load the dataset
     datasets = load_from_disk('data/final_cnn_dailymail')
 
-    # Load the tokenizer and model
     model_name = 'facebook/bart-large-cnn'
     tokenizer = BartTokenizer.from_pretrained(model_name)
     model = BartForConditionalGeneration.from_pretrained(model_name)
 
-    # Define training arguments
     training_args = TrainingArguments(
         output_dir='./results',
         evaluation_strategy='epoch',
@@ -23,7 +20,6 @@ def train_model():
         save_total_limit=3,
     )
 
-    # Initialize the Trainer
     trainer = Trainer(
         model=model,
         args=training_args,
@@ -32,10 +28,8 @@ def train_model():
         tokenizer=tokenizer,
     )
 
-    # Train the model
     trainer.train()
 
-    # Save the model
     model.save_pretrained('./summarization_model')
     tokenizer.save_pretrained('./summarization_model')
 
